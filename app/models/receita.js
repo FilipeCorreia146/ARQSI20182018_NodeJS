@@ -7,12 +7,9 @@ var mongoose     = require('mongoose');
 var receitaSchema = mongoose.Schema({
     utente: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
     medico: {type: mongoose.Schema.Types.ObjectId, ref: 'Medico'},
-    prescricoes: [{
-        farmaco : String,
-        apresentacao: String,
-        apresentacaoID: String, //id de apresentacao em GdM
-        posologiaPrescrita: String
-    }]
+    prescricoes: [
+        {type: mongoose.Schema.Types.ObjectId, ref: 'Prescricao'}
+    ]
 });
 
 //receitaSchema.plugin(mongoose_validator);

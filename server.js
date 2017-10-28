@@ -10,6 +10,7 @@ var bodyParser = require('body-parser');
 var Receita    = require('./app/models/receita');
 var Medico     = require('./app/models/medico');
 var User       = require('./app/models/user');
+var Prescricao = require('./app/models/prescricao');
 var bcrypt     = require('bcryptjs');
 
 // configure app to use bodyParser()
@@ -85,11 +86,9 @@ router.route('/Receita')
     .post(function(req, res) {
 
         var receita = new Receita();      // create a new instance of the Receita model
+        receita.utente = req.body.user;
         receita.medico = req.body.medico;
-        receita.farmaco = req.body.farmaco;
-        receita.apresentacao = req.body.apresentacao;
-        receita.apresentacaoID = req.body.apresentacaoID;
-        receita.posologiaPrescrita = req.body.posologiaPrescrita;
+        receita.prescricoes = req.body.prescricoes;
 
         // save the receita and check for errors
         receita.save(function(err) {
