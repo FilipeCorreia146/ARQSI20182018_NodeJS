@@ -1,0 +1,11 @@
+{
+    "name": "arqsi",
+    "main": "server.js",
+    "dependencies": {
+        "bcryptjs": "^2.4.3",
+        "body-parser": "~1.0.1",
+        "express": "~4.0.0",
+        "jsonwebtoken": "^8.1.0",
+        "mongoose": "~4.7.6"
+    }
+}
