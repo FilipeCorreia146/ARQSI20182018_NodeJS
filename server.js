@@ -4,18 +4,17 @@
 // =============================================================================
 
 // call the packages we need
-var express    = require('express');        // call express
-var app        = express();                 // define our app using express
+var express = require('express');        // call express
+var app = express();                 // define our app using express
 var bodyParser = require('body-parser');
-var Receita    = require('./app/models/receita');
-var Medico     = require('./app/models/medico');
-var User       = require('./app/models/user');
-var Farmaceutico = require('./app/models/farmaceutico');
-var bcrypt     = require('bcryptjs');
+var bcrypt = require('bcryptjs');
+var Api = require('./app/routes/api');
+var Users = require('./app/routes/users');
+var Receita = require('./app/routes/receita');
+module.exports = app;
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
-app.use('/api/users', User);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -29,100 +28,34 @@ mongoose.connect('mongodb://1150524:arqsi2017@ds040837.mlab.com:40837/arqsi', { 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
-console.log("we're connected!");
+    console.log("we're connected!");
 });
 mongoose.Promise = global.Promise;
 
 // ROUTES FOR OUR API
 // =============================================================================
-var router = express.Router();              // get an instance of the express Router
 
-router.use(function(req, res, next) {
-    // do logging
-    console.log('Something is happening.');
-    next(); // make sure we go to the next routes and don't stop here
-});
+app.use('/', Api);
+app.use('/Receita', Receita);
+app.use('/Users', Users);
 
-// test route to make sure everything is working (accessed at GET http://localhost:8080/api)
-router.get('/', function(req, res) {
-    res.json({ message: 'Welcome to a RESTful api' });   
-});
-
-router.route('/Registar')
-
-    .post(function(req,res){
-
-        var user = new User();
-        user.name = req.body.name;
-        hashedPassword = bcrypt.hashSync(req.body.password,8);
-        user.password = hashedPassword;
-        user.email = req.body.email;
-        user.medico = req.body.medico;
-        
-        user.save(function(err) {
-            console.log("A guardar");
-            if(err)
-                return res.status(500).send("Problema ao guardar o utilizador!");
-            
-            
-            res.json({message : 'Utilizador registado!'});
-        })
-
-        if(user.medico){
-            var medico = new Medico();
-            medico.userId = user.id;
-            medico.save(function(err) {
-                console.log("A guardar");
-                if(err)
-                    return res.status(500).send("Problema ao guardar o medico!");
-            
-                res.json({message : 'Medico registado!'});
-            })
-        }
-    });
-
-router.route('/Receita')
-
-    // create a receita (accessed at POST http://localhost:8080/api/Receita)
-    .post(function(req, res) {
-
-        var receita = new Receita();      // create a new instance of the Receita model
-        receita.utente = req.body.user;
-        receita.medico = req.body.medico;
-        receita.prescricoes = req.body.prescricoes;
-        // save the receita and check for errors
-        receita.save(function(err) {
-            if (err)
-                res.send(err);
-
-            res.json({ message: 'Receita criada com sucesso!' });
-        });
-    })
-
-        .get(function(req, res) {
-            Receita.find(function(err, receita) {
-                if (err)
-                    res.send(err);
-    
-                res.json(receita);
-            });
-    });
-
-router.route('/Receita/:receita_id')
-
-    .get(function(req, res) {
-        Receita.findById(req.params.receita_id, function(err, receita) {
-            if (err)
-                res.send(err);
-            res.json(receita);
-        });
-    });
-
-// more routes for our API will happen here
-
-// REGISTER OUR ROUTES -------------------------------
-// all of our routes will be prefixed with /api
-app.use('/api', router);
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
+  });
+  
+  // error handler
+  app.use(function(err, req, res, next) {
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
+  
+    // render the error page
+    res.status(err.status || 500);
+    res.render('error');
+  });
 
 // START THE SERVER
 // =============================================================================

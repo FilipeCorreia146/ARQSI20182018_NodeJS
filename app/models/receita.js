@@ -14,7 +14,7 @@ var receitaSchema = mongoose.Schema({
         posologiaPrescrita: String,
         quantidade: Number,
         aviamento: [{
-            data: Date,
+            data: {type: Date, default: Date.now},
             farmaceutico: {type: mongoose.Schema.Types.ObjectId, ref: 'Farmaceutico'}
         }]
     }]
