@@ -6,7 +6,7 @@ var mongoose     = require('mongoose');
 
 var receitaSchema = mongoose.Schema({
     utente: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
-    medico: {type: mongoose.Schema.Types.ObjectId, ref: 'Medico'},
+    medico: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
     prescricoes: [{
         farmaco : String,
         apresentacao: String,

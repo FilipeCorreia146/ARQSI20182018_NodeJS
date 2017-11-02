@@ -1,4 +1,5 @@
 var User = require('../models/user');
+var bcrypt = require('bcryptjs');
 
 
 exports.registarUser = function (req, res) {
@@ -9,6 +10,7 @@ exports.registarUser = function (req, res) {
     user.password = hashedPassword;
     user.email = req.body.email;
     user.medico = req.body.medico;
+    user.farmaceutico = req.body.farmaceutico;
 
     user.save(function (err) {
         console.log("A guardar");

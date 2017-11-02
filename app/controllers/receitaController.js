@@ -31,3 +31,11 @@ exports.listaReceitaPorId = function (req, res) {
         res.json(receita);
     })
 };
+
+exports.listaPrescricaoPorId = function (req, res) {
+    Receita.findById(req.params.receita_id, function (err, receita) {
+        if (err)
+            res.send(err);
+        res.json(receita);
+    })
+};

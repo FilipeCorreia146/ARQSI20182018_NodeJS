@@ -4,6 +4,6 @@ var router = express.Router();              // get an instance of the express Ro
 var userController = require('../controllers/userController');
 
 //Registar um novo utilizador
-router.post('/Registo', userController.registarUser);
+router.post('/Registar', userController.registarUser);
 
 module.exports = router;

@@ -12,4 +12,7 @@ router.post('/', receitaController.criarReceita);
 //Lista uma receita por ID
 router.get('/:receita_id', receitaController.listaReceitaPorId);
 
+//Lista prescricao por ID
+router.get('/:receita_id/Prescricao/:prescricao_id', receitaController.listaPrescricaoPorId);
+
 module.exports = router;
