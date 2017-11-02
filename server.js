@@ -10,10 +10,12 @@ var bodyParser = require('body-parser');
 var Receita    = require('./app/models/receita');
 var Medico     = require('./app/models/medico');
 var User       = require('./app/models/user');
+var Farmaceutico = require('./app/models/farmaceutico');
 var bcrypt     = require('bcryptjs');
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
+app.use('/api/users', User);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -46,7 +48,7 @@ router.get('/', function(req, res) {
     res.json({ message: 'Welcome to a RESTful api' });   
 });
 
-router.route('/registar')
+router.route('/Registar')
 
     .post(function(req,res){
 

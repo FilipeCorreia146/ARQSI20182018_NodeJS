@@ -11,7 +11,12 @@ var receitaSchema = mongoose.Schema({
         farmaco : String,
         apresentacao: String,
         apresentacaoID: String, //id de apresentacao em GdM
-        posologiaPrescrita: String
+        posologiaPrescrita: String,
+        quantidade: Number,
+        aviamento: [{
+            data: Date,
+            farmaceutico: {type: mongoose.Schema.Types.ObjectId, ref: 'Farmaceutico'}
+        }]
     }]
 });
 
