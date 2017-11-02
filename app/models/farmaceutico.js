@@ -10,4 +10,4 @@ var farmaceuticoSchema = mongoose.Schema({
 
 //medicoSchema.plugin(mongoose_validator);
 
-module.exports = mongoose.model('Farmaceutico', medicoSchema);
+module.exports = mongoose.model('Farmaceutico', farmaceuticoSchema);
