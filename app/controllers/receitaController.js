@@ -34,10 +34,10 @@ exports.listaReceitaPorId = function (req, res) {
 
 exports.listaPrescricaoPorId = function (req, res) {
     Receita.findById(req.params.receita_id, function (err, receita) {
-        var prescricao = receita.prescricoes.find(o => o._id = req.params.prescricao_id );
-            if (err)
+        var prescricao = receita.prescricoes.find(o => o._id = req.params.prescricao_id);
+        if (err)
             res.send(err);
         res.json(prescricao);
-    
+
     })
 };
