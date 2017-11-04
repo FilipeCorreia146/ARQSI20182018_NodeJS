@@ -6,4 +6,7 @@ var userController = require('../controllers/userController');
 //Registar um novo utilizador
 router.post('/Registar', userController.registarUser);
 
+//Retorna todos os users na base de dados
+router.get('/', userController.listarUsers);
+
 module.exports = router;

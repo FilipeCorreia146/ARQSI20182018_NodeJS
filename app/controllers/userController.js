@@ -22,3 +22,12 @@ exports.registarUser = function (req, res) {
     })
 
 };
+
+exports.listarUsers = function (req, res) {
+    User.find(function (err, user) {
+        if (err)
+            res.send(err);
+
+        res.json(user);
+    })
+};
