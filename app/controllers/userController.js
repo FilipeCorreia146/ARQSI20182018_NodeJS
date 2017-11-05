@@ -6,7 +6,7 @@ var config = require('../../config');
 exports.registarUser = function (req, res) {
 
     var user = new User();
-    user.name = req.body.name;
+    user.nome = req.body.nome;
     hashedPassword = bcrypt.hashSync(req.body.password, 8);
     user.password = hashedPassword;
     user.email = req.body.email;
@@ -20,6 +20,14 @@ exports.registarUser = function (req, res) {
 
 
         res.json({ message: 'Utilizador registado!' });
+
+        //create a token
+        //var token = config.jwt.sign({ id: user._id}, config.secret, {
+          //expiresIn: 86400 //expires in 24 hours
+        //});
+
+        //res.status(200).send({ auth: true, token: token});
+
     })
 
 };
@@ -33,7 +41,7 @@ exports.listarUsers = function (req, res) {
     })
 };
 
-exports.autenticarUserMedico = function(req, res) {
+exports.autenticarUser = function(req, res) {
     
       // find the user
       User.findOne({
@@ -51,12 +59,14 @@ exports.autenticarUserMedico = function(req, res) {
           if(!bcrypt.compareSync(req.body.password, user.password)){
             res.json({ success: false, message: 'Authentication failed. Wrong password.' });
           } else {
-    
+            
+            //req.user = user;
+
             // if user is found and password is right
             // create a token with only our given payload
         // we don't want to pass in the entire user since that has the password
         const payload = {
-          medico: user.medico 
+          //medico: user.medico 
         };
 
             var token = config.jwt.sign(payload, /*app.get('superSecret')*/config.secret, {
