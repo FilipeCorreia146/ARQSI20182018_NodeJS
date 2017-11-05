@@ -9,4 +9,7 @@ router.post('/Registar', userController.registarUser);
 //Retorna todos os users na base de dados
 router.get('/', userController.listarUsers);
 
+//Autenticar um utilizador que seja medico
+router.post('/Autenticar/Medico', userController.autenticarUserMedico);
+
 module.exports = router;
