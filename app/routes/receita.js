@@ -5,6 +5,8 @@ var receitaController = require('../controllers/receitaController');
 
 var config = require('../../config');
 
+var VerifyToken = require('../../VerifyToken');
+
 // route middleware to verify a token
 //router.use(function(req, res, next) {
 function isUser(req, res, next) {
@@ -46,13 +48,13 @@ function isMedico(req, res, next) {
 }
 
 //Retorna todas as receitas na base de dados
-router.get('/', isUser/*, andRestrictTo('medico')*/, receitaController.listarReceitas);
+router.get('/', VerifyToken, receitaController.listarReceitas);
 
 //Cria uma nova receita
-router.post('/', receitaController.criarReceita);
+router.post('/', VerifyToken, receitaController.criarReceita);
 
 //Lista uma receita por ID
-router.get('/:receita_id', receitaController.listaReceitaPorId);
+router.get('/:receita_id', VerifyToken, receitaController.listaReceitaPorId);
 
 //Lista prescricao por ID
 router.get('/:receita_id/Prescricao/:prescricao_id', receitaController.listaPrescricaoPorId);

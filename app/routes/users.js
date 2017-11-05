@@ -3,6 +3,8 @@ var router = express.Router();              // get an instance of the express Ro
 
 var userController = require('../controllers/userController');
 
+var VerifyToken = require('../../VerifyToken');
+
 //Registar um novo utilizador
 router.post('/Registar', userController.registarUser);
 
@@ -11,5 +13,16 @@ router.get('/', userController.listarUsers);
 
 //Autenticar um utilizador
 router.post('/Autenticar', userController.autenticarUser);
+
+router.get('/Me', VerifyToken, userController.me);
+
+router.post('/Login', userController.login);
+
+router.get('/Logout', userController.logout);
+
+// add the middleware function
+router.use(function (user, req, res, next) {
+    res.status(200).send(user);
+});
 
 module.exports = router;
