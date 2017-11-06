@@ -7,46 +7,6 @@ var config = require('../../config');
 
 var VerifyToken = require('../../VerifyToken');
 
-// route middleware to verify a token
-//router.use(function(req, res, next) {
-function isUser(req, res, next) {
-      // check header or url parameters or post parameters for token
-      var token = req.body.token || req.query.token || req.headers['x-access-token'];
-    
-      // decode token
-      if (token) {
-    
-        // verifies secret and checks exp
-        config.jwt.verify(token, /*app.get('superSecret')*/config.secret, function(err, decoded) {      
-          if (err) {
-            return res.json({ success: false, message: 'Failed to authenticate token.' });    
-          } else {
-            // if everything is good, save to request for use in other routes      
-            req.decoded = decoded;
-            next();
-          }
-        });
-    
-      } else {
-    
-        // if there is no token
-        // return an error
-        return res.status(403).send({ 
-            success: false, 
-            message: 'No token provided.' 
-        });
-    
-      }
-}/*);*/
-
-function isMedico(req, res, next) {
-  if(req.decoded._doc.medico !== true){
-    return next(err);
-  }else{
-    return next();
-  }
-}
-
 //Retorna todas as receitas na base de dados
 router.get('/', VerifyToken, receitaController.listarReceitas);
 

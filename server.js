@@ -26,7 +26,7 @@ var config = require('./config');
 
 //mongodb://mcn:mcn@ds121575.mlab.com:21575/arqsi2 // connection string para MongoDB local
 
-mongoose.connect(/*'mongodb://1150524:arqsi2017@ds040837.mlab.com:40837/arqsi'*/config.database, { useMongoClient: true });
+mongoose.connect(config.database, { useMongoClient: true });
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {

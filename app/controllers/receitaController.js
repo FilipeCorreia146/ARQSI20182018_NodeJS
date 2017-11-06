@@ -41,8 +41,7 @@ exports.listarReceitas = function (req, res) {
         if (err)
             res.send(err);
 
-        if((receita.medico = req.userId) || (receita.utente = req.userId)/* || 
-            (user.farmaceutico == true && receita._id == req.body.receitaId)*/) {
+        if((receita.medico = req.userId) || (receita.utente = req.userId)) {
             res.json(receita);
         }else {
             res.json({ message: 'Utilizador nao autorizado!'});
@@ -56,25 +55,33 @@ exports.listarReceitas = function (req, res) {
 
 exports.listaReceitaPorId = function (req, res) {
 
-    /*User.findById(req.userId, { password: 0 }, function (err, user) {
+    User.findById(req.userId, { password: 0 }, function (err, user) {
         if (err) return res.status(500).send("There was a problem finding the user.");
-        if (!user) return res.status(404).send("No user found.");*/
+        if (!user) return res.status(404).send("No user found.");
 
-    var query = {
-        $or:[
-          { utente: req.userId },
-          { medico: req.userId }/*,
-          { user.farmaceutico: true}*/
-        ]
-    } 
+    userController.hasRole(user.email, 'farmaceutico', function(decision){
+        if(!decision)
+            return res.status(403).send(
+                { auth: false, token: null, message: 'You have no authorization.' });
+        else
+           
+            var query = {
+                _id: req.params.receita_id,
+                $or:[
+                    { utente: req.userId },
+                    { medico: req.userId }
+                ]
+            } 
 
-    Receita.findById(req.params.receita_id, function (err, receita) {
-        if (err)
-            res.send(err);
-        res.json(receita);
-    })
+            Receita.findById(/*req.params.receita_id*/query, function (err, receita) {
+            if (err)
+                res.send(err);
+            res.json(receita);
+            })
 
-    //});
+    });
+
+    });
 
 };
 

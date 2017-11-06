@@ -47,7 +47,7 @@ exports.autenticarUser = function(req, res) {
     
       // find the user
       User.findOne({
-        nome: req.body.nome
+        email: req.body.email
       }, function(err, user) {
     
         if (err) throw err;
@@ -90,26 +90,6 @@ exports.autenticarUser = function(req, res) {
 
 exports.me = function(req, res, next) {
 
-  //var token = req.headers['x-access-token'];
-  //if (!token) return res.status(401).send({ auth: false, message: 'No token provided.' });
-  
-  //config.jwt.verify(token, config.secret, function(err, decoded) {
-    //if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
-    
-    //res.status(200).send(decoded);
-
-    //User.findById(decoded.id, 
-      //{ password: 0 }, // projection
-      //function (err, user) {
-        //if (err) return res.status(500).send("There was a problem finding the user.");
-        //if (!user) return res.status(404).send("No user found.");
-        
-        //res.status(200).send(user);
-        //next(user);
-    //});
-
-  //});
-
   User.findById(req.userId, { password: 0 }, function (err, user) {
     if (err) return res.status(500).send("There was a problem finding the user.");
     if (!user) return res.status(404).send("No user found.");
@@ -140,4 +120,21 @@ exports.login = function(req, res) {
 
 exports.logout = function(req, res) {
   res.status(200).send({ auth: false, token: null });
+};
+
+exports.hasRole = function(userEmail, role, func) {
+  User.findOne({
+    email: userEmail
+  }, function(err, user) {
+    
+    if (err) throw err;
+
+    if (!user) {
+      res.json({ success: false, message: 'Authentication failed.' });
+    } else if (user) {
+      //check if role matches
+      func(role === 'medico' && user.medico === true);
+      func(role === 'farmaceutico' && user.farmaceutico === true);
+    }
+  });
 };
