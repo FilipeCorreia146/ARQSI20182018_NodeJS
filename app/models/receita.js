@@ -15,7 +15,7 @@ var receitaSchema = mongoose.Schema({
         quantidade: Number,
         aviamento: [{
             data: {type: Date, default: Date.now},
-            farmaceutico: {type: mongoose.Schema.Types.ObjectId, ref: 'Farmaceutico'}
+            farmaceutico: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
         }]
     }]
 });
