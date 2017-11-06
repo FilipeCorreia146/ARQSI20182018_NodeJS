@@ -4,6 +4,8 @@ var User = require('../models/user');
 
 var VerifyToken = require('../../VerifyToken');
 
+var userController = require('./userController');
+
 exports.criarReceita = function (req, res) {
 
     User.findById(req.userId, { password: 0 }, function (err, user) {
@@ -60,10 +62,9 @@ exports.listaReceitaPorId = function (req, res) {
         if (!user) return res.status(404).send("No user found.");
 
         userController.hasRole(user.email, 'farmaceutico', function (decision) {
-            if (!decision)
-                return res.status(403).send(
-                    { auth: false, token: null, message: 'You have no authorization.' });
-            else
+            if (!decision) {
+                //return res.status(403).send(
+                //  { auth: false, token: null, message: 'You have no authorization.' });
 
                 var query = {
                     _id: req.params.receita_id,
@@ -73,11 +74,20 @@ exports.listaReceitaPorId = function (req, res) {
                     ]
                 }
 
-            Receita.findById(/*req.params.receita_id*/query, function (err, receita) {
-                if (err)
-                    res.send(err);
-                res.json(receita);
-            })
+                Receita.findOne/*ById*/(/*req.params.receita_id*/query, function (err, receita) {
+                    if (err)
+                        res.send(err);
+                    res.json(receita);
+                })
+            } else {
+
+                Receita.findById(req.params.receita_id, function (err, receita) {
+                    if (err)
+                        res.send(err);
+                    res.json(receita);
+
+                })
+            }
 
         });
 
