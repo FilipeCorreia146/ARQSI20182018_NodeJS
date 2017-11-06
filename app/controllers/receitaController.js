@@ -62,9 +62,22 @@ exports.listaReceitaPorId = function (req, res) {
         if (!user) return res.status(404).send("No user found.");
 
         userController.hasRole(user.email, 'farmaceutico', function (decision) {
+<<<<<<< HEAD
             if (!decision) {
                 //return res.status(403).send(
                 //  { auth: false, token: null, message: 'You have no authorization.' });
+=======
+<<<<<<< HEAD
+            if (!decision)
+                return res.status(403).send(
+                    { auth: false, token: null, message: 'You have no authorization.' });
+            else
+=======
+            if (!decision) {
+                //return res.status(403).send(
+                //  { auth: false, token: null, message: 'You have no authorization.' });
+>>>>>>> b3f8f60211a9e6ef1521ef43a06ff02de2368e80
+>>>>>>> 33183ea870f47d61fd08c24dda9a8082f3ae5820
 
                 var query = {
                     _id: req.params.receita_id,
@@ -74,6 +87,16 @@ exports.listaReceitaPorId = function (req, res) {
                     ]
                 }
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+            Receita.findById(/*req.params.receita_id*/query, function (err, receita) {
+                if (err)
+                    res.send(err);
+                res.json(receita);
+            })
+=======
+>>>>>>> 33183ea870f47d61fd08c24dda9a8082f3ae5820
                 Receita.findOne/*ById*/(/*req.params.receita_id*/query, function (err, receita) {
                     if (err)
                         res.send(err);
@@ -88,6 +111,10 @@ exports.listaReceitaPorId = function (req, res) {
 
                 })
             }
+<<<<<<< HEAD
+=======
+>>>>>>> b3f8f60211a9e6ef1521ef43a06ff02de2368e80
+>>>>>>> 33183ea870f47d61fd08c24dda9a8082f3ae5820
 
         });
 
