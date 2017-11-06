@@ -135,7 +135,7 @@ exports.hasRole = function (userEmail, role, func) {
       //check if role matches
       if (role === 'medico') {
         func(role === 'medico' && user.medico === true);
-      } else if (role === 'medico') {
+      } else if (role === 'farmaceutico') {
         func(role === 'farmaceutico' && user.farmaceutico === true);
       }
     }
