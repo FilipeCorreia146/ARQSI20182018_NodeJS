@@ -19,4 +19,6 @@ router.get('/:receita_id', VerifyToken, receitaController.listaReceitaPorId);
 //Lista prescricao por ID
 router.get('/:receita_id/Prescricao/:prescricao_id', receitaController.listaPrescricaoPorId);
 
+router.put('/:receita_id/Prescricao/:prescricao_id/Aviar',VerifyToken, receitaController.aviarReceita);
+
 module.exports = router;

@@ -97,3 +97,25 @@ exports.listaPrescricaoPorId = function (req, res) {
 
     })
 };
+
+exports.aviarReceita = function (req, res) {
+    User.findById(req.userId, { password: 0 }, function (err, user) {
+
+        Receita.findById(req.params.receita_id, function (err, receita) {
+            var prescricao = receita.prescricoes.find(o => o._id = req.params.prescricao_id);
+            if (err)
+                res.send(err);
+
+            var farmaceutico = user._id;
+
+            prescricao.aviamento.push(farmaceutico);
+
+            receita.save(function (err) {
+                if (err)
+                    res.send(err);
+                res.json({ message: 'Aviamento criado com sucesso!' });
+
+            })
+        })
+    })
+};
