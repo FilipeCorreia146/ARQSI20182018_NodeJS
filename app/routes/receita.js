@@ -1,4 +1,4 @@
-var express    = require('express');        // call express
+var express = require('express');        // call express
 var router = express.Router();              // get an instance of the express Router
 
 var receitaController = require('../controllers/receitaController');
@@ -19,8 +19,10 @@ router.get('/:receita_id', VerifyToken, receitaController.listaReceitaPorId);
 //Lista prescricao por ID
 router.get('/:receita_id/Prescricao/:prescricao_id', receitaController.listaPrescricaoPorId);
 
-router.put('/:receita_id/Prescricao/:prescricao_id/Aviar',VerifyToken, receitaController.aviarReceita);
+router.put('/:receita_id/Prescricao/:prescricao_id/Aviar', VerifyToken, receitaController.aviarReceita);
 
 router.get('/:receita_id/Prescricao/:prescricao_id/Aviamentos', VerifyToken, receitaController.aviamentos);
+
+router.put('/:receita_id/Prescricao/:prescricao_id/Atualizar', VerifyToken, receitaController.atualizarReceita);
 
 module.exports = router;

@@ -166,3 +166,40 @@ exports.aviamentos = function (req, res) {
 
     });
 };
+
+exports.atualizarReceita = function (req, res) {
+
+    var query = {
+        _id: req.params.receita_id,
+        medico: req.userId
+    }
+
+    Receita.findOne(query, function (err, receita) {
+        if (receita == undefined) {
+            res.send("A prescricao nao existe ou nao tem autorizacao para aceder a mesma!");
+        } else {
+            var prescricao = receita.prescricoes.find(o => o._id = req.params.prescricao_id);
+
+            if (err)
+                res.send("A prescricao nao existe ou nao tem autorizacao para aceder a mesma!");
+
+            if (prescricao.aviamentos != undefined) {
+                prescricao.farmaco = req.body.farmaco;
+                prescricao.apresentacao = req.body.apresentacao;
+                prescricao.apresentacaoID = req.body.apresentacaoID;
+                prescricao.posologiaPrescrita = req.body.posologiaPrescrita;
+                prescricao.quantidade = req.body.quantidade;
+                receita.save(function (err) {
+                    if (err)
+                        res.send(err);
+
+                    res.json({ message: 'Prescricao atualizada criado com sucesso!' });
+                })
+            } else {
+                res.json({ message: 'A prescricao ja tem aviamentos, logo nao pode ser atualizada!' });
+            }
+        }
+
+    });
+
+};
