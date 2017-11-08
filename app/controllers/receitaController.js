@@ -119,3 +119,42 @@ exports.aviarReceita = function (req, res) {
         })
     })
 };
+
+exports.aviamentos = function (req, res) {
+    User.findById(req.userId, { password: 0 }, function (err, user) {
+        if (err) return res.status(500).send("There was a problem finding the user.");
+        if (!user) return res.status(404).send("No user found.");
+
+        userController.hasRole(user.email, 'farmaceutico', function (decision) {
+            if (!decision) {
+
+                var query = {
+                    _id: req.params.receita_id,
+                    $or: [
+                        { utente: req.userId },
+                        { medico: req.userId }
+                    ]
+                }
+
+                Receita.findOne(query, function (err, receita) {
+                    var prescricao = receita.prescricoes.find(o => o._id = req.params.prescricao_id);
+                    
+                    if (err)
+                        res.send("O aviamento nao existe ou nao tem autorizacao para aceder à mesma!");
+                    res.json(prescricao.aviamento);
+                })
+            } else {
+
+                Receita.findById(req.params.receita_id, function (err, receita) {
+                    var prescricao = receita.prescricoes.find(o => o._id = req.params.prescricao_id);
+        
+                    if (err)
+                        res.send("Nao ha aviamentos para visualizar.");
+                    res.json(prescricao.aviamento);
+                });
+            }
+
+        });
+
+    });
+};
