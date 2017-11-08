@@ -68,9 +68,13 @@ exports.listaReceitaPorId = function (req, res) {
                 }
 
                 Receita.findOne(query, function (err, receita) {
-                    if (err)
+                    if (receita == undefined) {
                         res.send("A Receita nao existe ou nao tem autorizacao para aceder à mesma!");
-                    res.json(receita);
+                    } else {
+                        if (err)
+                            res.send("A Receita nao existe ou nao tem autorizacao para aceder à mesma!");
+                        res.json(receita);
+                    }
                 })
             } else {
 
@@ -137,17 +141,21 @@ exports.aviamentos = function (req, res) {
                 }
 
                 Receita.findOne(query, function (err, receita) {
-                    var prescricao = receita.prescricoes.find(o => o._id = req.params.prescricao_id);
-                    
-                    if (err)
-                        res.send("O aviamento nao existe ou nao tem autorizacao para aceder à mesma!");
-                    res.json(prescricao.aviamento);
+                    if (receita == undefined) {
+                        res.send("O aviamento nao existe ou nao tem autorizacao para aceder ao mesmo!");
+                    } else {
+                        var prescricao = receita.prescricoes.find(o => o._id = req.params.prescricao_id);
+
+                        if (err)
+                            res.send("O aviamento nao existe ou nao tem autorizacao para aceder ao mesmo!");
+                        res.json(prescricao.aviamento);
+                    }
                 })
             } else {
 
                 Receita.findById(req.params.receita_id, function (err, receita) {
                     var prescricao = receita.prescricoes.find(o => o._id = req.params.prescricao_id);
-        
+
                     if (err)
                         res.send("Nao ha aviamentos para visualizar.");
                     res.json(prescricao.aviamento);
