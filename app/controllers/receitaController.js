@@ -104,23 +104,33 @@ exports.listaPrescricaoPorId = function (req, res) {
 
 exports.aviarReceita = function (req, res) {
     User.findById(req.userId, { password: 0 }, function (err, user) {
+        if (err) return res.status(500).send("There was a problem finding the user.");
+        if (!user) return res.status(404).send("No user found.");
 
-        Receita.findById(req.params.receita_id, function (err, receita) {
-            var prescricao = receita.prescricoes.find(o => o._id = req.params.prescricao_id);
-            if (err)
-                res.send(err);
+        userController.hasRole(user.email, 'farmaceutico', function (decision) {
+            if (decision) {
 
-            var farmaceutico = user._id;
+                Receita.findById(req.params.receita_id, function (err, receita) {
+                    var prescricao = receita.prescricoes.find(o => o._id = req.params.prescricao_id);
+                    if (err)
+                        res.send(err);
 
-            prescricao.aviamento.push(farmaceutico);
+                    var farmaceutico = user._id;
 
-            receita.save(function (err) {
-                if (err)
-                    res.send(err);
-                res.json({ message: 'Aviamento criado com sucesso!' });
+                    prescricao.aviamento.push(farmaceutico);
 
-            })
+                    receita.save(function (err) {
+                        if (err)
+                            res.send(err);
+                        res.json({ message: 'Aviamento criado com sucesso!' });
+
+                    })
+                })        
+            }else{
+                res.send("Apenas um farmaceutico pode aviar uma prescricao!");
+            }
         })
+
     })
 };
 
