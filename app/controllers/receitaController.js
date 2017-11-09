@@ -112,21 +112,35 @@ exports.aviarReceita = function (req, res) {
 
                 Receita.findById(req.params.receita_id, function (err, receita) {
                     var prescricao = receita.prescricoes.find(o => o._id = req.params.prescricao_id);
-                    if (err)
+                    if (err) {
                         res.send(err);
+                    } else if (prescricao.validade > Date.now || prescricao.validade > req.body.data) {
+                        res.send("Aviamento nao pode ser criado pois excede a data de validade da prescricao!")
+                    } else {
 
-                    var farmaceutico = user._id;
+                        var cont = req.body.quantidade;
 
-                    prescricao.aviamento.push(farmaceutico);
+                        prescricao.aviamentos.forEach(function (aviamento) {
+                            cont += aviamento.quantidade;
+                        })
 
-                    receita.save(function (err) {
-                        if (err)
-                            res.send(err);
-                        res.json({ message: 'Aviamento criado com sucesso!' });
+                        if (cont > prescricao.quantidade) {
+                        }
 
-                    })
-                })        
-            }else{
+                        var farmaceutico = user._id;
+
+                        prescricao.aviamento.push(farmaceutico);
+
+                        receita.save(function (err) {
+                            if (err)
+                                res.send(err);
+                            res.json({ message: 'Aviamento criado com sucesso!' });
+
+                        })
+                    }
+
+                })
+            } else {
                 res.send("Apenas um farmaceutico pode aviar uma prescricao!");
             }
         })
