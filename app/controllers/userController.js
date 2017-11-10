@@ -1,4 +1,5 @@
 var User = require('../models/user');
+var Receitas = require('../models/receita');
 var bcrypt = require('bcryptjs');
 
 var config = require('../../config');
@@ -140,4 +141,43 @@ exports.hasRole = function (userEmail, role, func) {
       }
     }
   });
+};
+
+
+exports.prescricoesPorAviar = function (req, res) {
+
+
+  var query = {
+    utente: req.params.user_id,
+  }
+
+  Receitas.find(query, function (err, receita) {
+
+    var prescricao = [];
+
+    var i = 0;
+    receita.forEach(function (element) {
+
+      if (element.prescricoes.length > 0) {
+
+        prescricao[i] = element.prescricoes;
+        i++;
+
+      }
+    }, this);
+
+    var flat = [].concat.apply([], prescricao);
+
+    flat.forEach(function(item, index, object) {
+      if(item.aviamento.length>0) {
+        object.splice(index,1);
+      }
+    })
+
+    if (err)
+      res.send("Algo correu mal!");
+    res.json(flat);
+
+  });
+
 };

@@ -20,6 +20,8 @@ router.post('/Login', userController.login);
 
 router.get('/Logout', userController.logout);
 
+router.get('/:user_id/Prescricoes/poraviar', userController.prescricoesPorAviar);
+
 // add the middleware function
 router.use(function (user, req, res, next) {
     res.status(200).send(user);

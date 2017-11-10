@@ -121,7 +121,7 @@ exports.aviarReceita = function (req, res) {
                         var cont = req.body.quantidade;
 
                         prescricao.aviamentos.forEach(function (aviamento) {
-                            cont += aviamento.quantidade;
+                             cont += aviamento.quantidade;
                         })
 
                         if (cont > prescricao.quantidade) {
