@@ -4,6 +4,10 @@ var bcrypt = require('bcryptjs');
 
 var config = require('../../config');
 var VerifyToken = require('../../VerifyToken');
+var Client = require('node-rest-client').Client;
+var client = new Client();
+
+client.registerMethod("registarUser", "http://localhost:50609/api/Account/", "POST");
 
 
 exports.registarUser = function (req, res) {
@@ -15,6 +19,20 @@ exports.registarUser = function (req, res) {
   user.email = req.body.email;
   user.medico = req.body.medico;
   user.farmaceutico = req.body.farmaceutico;
+
+  var args = {
+    data: { Email: req.body.email, Password: req.body.password },
+    headers: { "Content-Type": "application/json" }
+  };
+
+  client.registarUser(args, function (data, response) {
+
+    // parsed response body as js object
+    console.log(data);
+    // raw response
+    console.log(response);
+
+  });
 
   user.save(function (err) {
     console.log("A guardar");
@@ -146,37 +164,57 @@ exports.hasRole = function (userEmail, role, func) {
 
 exports.prescricoesPorAviar = function (req, res) {
 
+  User.findById(req.userId, { password: 0 }, function (err, user) {
+    if (err) return res.status(500).send("There was a problem finding the user.");
+    if (!user) return res.status(404).send("No user found.");
 
-  var query = {
-    utente: req.params.user_id,
-  }
+    hasRole(user.email, 'farmaceutico', function (decision) {
+      if (!decision) {
 
-  Receitas.find(query, function (err, receita) {
+        var query = {
+          utente: req.params.user_id,
+          $or: [
+            { utente: req.userId },
+            { medico: req.userId }
+          ]
+        }
+      } else {
 
-    var prescricao = [];
-
-    var i = 0;
-    receita.forEach(function (element) {
-
-      if (element.prescricoes.length > 0) {
-
-        prescricao[i] = element.prescricoes;
-        i++;
-
+        var query = {
+          utente: req.params.user_id
+        }
+        
       }
-    }, this);
 
-    var flat = [].concat.apply([], prescricao);
+      Receitas.find(query, function (err, receita) {
 
-    flat.forEach(function(item, index, object) {
-      if(item.aviamento.length>0) {
-        object.splice(index,1);
-      }
-    })
+        var prescricao = [];
 
-    if (err)
-      res.send("Algo correu mal!");
-    res.json(flat);
+        var i = 0;
+        receita.forEach(function (element) {
+
+          if (element.prescricoes.length > 0) {
+
+            prescricao[i] = element.prescricoes;
+            i++;
+
+          }
+        }, this);
+
+        var flat = [].concat.apply([], prescricao);
+
+        flat.forEach(function (item, index, object) {
+          if (item.aviamento.length > 0) {
+            object.splice(index, 1);
+          }
+        })
+
+        if (err)
+          res.send("Algo correu mal!");
+        res.json(flat);
+
+      });
+    });
 
   });
 
