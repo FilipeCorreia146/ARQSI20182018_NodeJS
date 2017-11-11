@@ -5,6 +5,12 @@ var bcrypt = require('bcryptjs');
 var config = require('../../config');
 var VerifyToken = require('../../VerifyToken');
 
+//var Client = require('node-rest-client').Client;
+
+//var client = new Client();
+
+//client.registerMethod("postUser", "http://localhost:50609/api/Account/login2", "POST");
+
 exports.registarUser = function (req, res) {
 
   var user = new User();
@@ -17,6 +23,14 @@ exports.registarUser = function (req, res) {
 
   user.save(function (err) {
     console.log("A guardar");
+    /*var args = {
+      parameters: { Email : req.body.email, Password: req.body.password }, // path substitution var
+      //headers: { "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJlNDlhYzJmMy1kYjI3LTQwZTgtYjI1My02NTZiODMwYzRlZDIiLCJzdWIiOiJ1dGVudGU1QGdtYWlsLmNvbSIsImV4cCI6MTUxMDQxODg4NSwiaXNzIjoiaHR0cDovL3NlbWVudGV3ZWJhcGkubG9jYWwiLCJhdWQiOiJodHRwOi8vc2VtZW50ZXdlYmFwaS5sb2NhbCJ9.0PjdNrDXsXlbsfAqkk317qqxvm_dQIQn8U7DWZcfnAs"}                 
+    }
+    client.methods.postUser(args, function (data, response) {
+      console.log(data);
+      console.log(response);
+    })*/
     if (err)
       return res.status(500).send("Problema ao guardar o utilizador!");
 
@@ -164,7 +178,7 @@ exports.prescricoesPorAviar = function (req, res) {
         var query = {
           utente: req.params.user_id
         }
-        
+
       }
 
       Receitas.find(query, function (err, receita) {

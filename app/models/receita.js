@@ -13,7 +13,7 @@ var receitaSchema = mongoose.Schema({
         apresentacao: String,
         apresentacaoID: String, //id de apresentacao em GdM
         posologiaPrescrita: String,
-        posologiaID: String,
+        posologiaID: Number,
         quantidade: Number,
         validade: Date,
         aviamento: [{
