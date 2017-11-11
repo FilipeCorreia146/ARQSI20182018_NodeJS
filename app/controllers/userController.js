@@ -4,11 +4,6 @@ var bcrypt = require('bcryptjs');
 
 var config = require('../../config');
 var VerifyToken = require('../../VerifyToken');
-var Client = require('node-rest-client').Client;
-var client = new Client();
-
-client.registerMethod("registarUser", "http://localhost:50609/api/Account/", "POST");
-
 
 exports.registarUser = function (req, res) {
 
@@ -19,20 +14,6 @@ exports.registarUser = function (req, res) {
   user.email = req.body.email;
   user.medico = req.body.medico;
   user.farmaceutico = req.body.farmaceutico;
-
-  var args = {
-    data: { Email: req.body.email, Password: req.body.password },
-    headers: { "Content-Type": "application/json" }
-  };
-
-  client.registarUser(args, function (data, response) {
-
-    // parsed response body as js object
-    console.log(data);
-    // raw response
-    console.log(response);
-
-  });
 
   user.save(function (err) {
     console.log("A guardar");
