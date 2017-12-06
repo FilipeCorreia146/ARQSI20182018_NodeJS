@@ -122,10 +122,22 @@ exports.login = function (req, res) {
 
     var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
 
-    if (!passwordIsValid) return res.status(401).send({ auth: false, token: null });
-    var token = config.jwt.sign({ id: user._id }, config.secret, {
-      expiresIn: 86400 // expires in 24 hours
+    //if (!passwordIsValid) return res.status(401).send({ auth: false, token: null });
+    //var token = config.jwt.sign({ id: user._id }, config.secret, {
+    //  expiresIn: 86400 // expires in 24 hours
+    //});
+
+    const payload = {
+      user: user.email,
+      medico: user.medico,
+      farmaceutico: user.farmaceutico,
+      utente: user.paciente
+    }
+
+    var token = config.jwt.sign(payload, config.secret, {
+      expiresIn: 30 * 60 //1 hora
     });
+
 
     res.status(200).send({ auth: true, token: token });
   });

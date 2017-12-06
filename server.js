@@ -7,6 +7,7 @@
 var express = require('express');        // call express
 var app = express();                 // define our app using express
 var bodyParser = require('body-parser');
+var cors = require('cors');
 var bcrypt = require('bcryptjs');
 var Api = require('./app/routes/api');
 var Users = require('./app/routes/users');
@@ -17,6 +18,7 @@ module.exports = app;
 // this will let us get the data from a POST
 app.use(bodyParser.urlencoded({ extended: /*false*/true }));
 app.use(bodyParser.json());
+app.use(cors());
 
 var port = process.env.PORT || 8080;        // set our port
 
