@@ -12,6 +12,18 @@ var client = new Client();
 
 client.registerMethod("getPosologia", "http://localhost:50609/api/Posologias/${id}", "GET");
 
+var nodemailer = require("nodemailer");
+
+var smtpTransport = nodemailer.createTransport({
+    host: "mail.smtp2go.com",
+    port: 2525, // 8025, 587 and 25 can also be used. 
+    auth: {
+        user: "smtpARQSI_1150524_1150595",
+        pass: "limao2017"
+    }
+});
+
+
 exports.criarReceita = function (req, res) {
 
     User.findById(req.userId, { password: 0 }, function (err, user) {
@@ -40,6 +52,18 @@ exports.criarReceita = function (req, res) {
             receita.save(function (err) {
                 if (err)
                     res.send(err);
+                /*smtpTransport.sendMail({
+                    from: "server@example.com",
+                    to: "recipient@example.com",
+                    subject: "Your Subject",
+                    text: "It is a test message"
+                }, function (error, response) {
+                    if (error) {
+                        console.log(error);
+                    } else {
+                        console.log("Message sent: " + response.message);
+                    }
+                });*/
                 res.json({ message: 'Receita criada com sucesso!' });
             });
 
@@ -49,6 +73,7 @@ exports.criarReceita = function (req, res) {
     });
 
 };
+
 
 exports.listarReceitas = function (req, res) {
 
