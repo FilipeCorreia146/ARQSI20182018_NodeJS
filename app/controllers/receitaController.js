@@ -77,14 +77,14 @@ exports.criarReceita = function (req, res) {
 
 exports.listarReceitas = function (req, res) {
 
-    var query = {
+    /*var query = {
         $or: [
             { utente: req.userId },
             { medico: req.userId }
         ]
-    }
+    }*/
 
-    Receita.find(query, function (err, receita) {
+    Receita.find(/*query, */function (err, receita) {
         if (err)
             res.send("Nao ha receitas para visualizar.");
         res.json(receita);

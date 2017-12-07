@@ -4,6 +4,6 @@ module.exports = {
     
     'jwt': jwt,
     'secret': 'ilovescotchyscotch',
-    'database': 'mongodb://arqsi:arqsi2017@ds042677.mlab.com:42677/arqsi'
+    'database': 'mongodb://1150524_1150595:015melhorano@ds042677.mlab.com:42677/arqsi'
     
 };

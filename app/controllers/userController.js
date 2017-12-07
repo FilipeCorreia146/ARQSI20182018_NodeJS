@@ -81,8 +81,14 @@ exports.autenticarUser = function (req, res) {
         // if user is found and password is right
         // create a token with only our given payload
         // we don't want to pass in the entire user since that has the password
-        const payload = {
+        /**const payload = {
           //medico: user.medico 
+        };*/
+
+        const payload = {
+          user: user.email,
+          medico: user.medico,
+          farmaceutico: user.farmaceutico
         };
 
         var token = config.jwt.sign(payload, /*app.get('superSecret')*/config.secret, {
