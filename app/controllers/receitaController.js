@@ -10,6 +10,20 @@ var Client = require('node-rest-client').Client;
 
 var client = new Client();
 
+client.registerMethod("getPosologia", "http://localhost:50609/api/Posologias/${id}", "GET");
+
+var nodemailer = require("nodemailer");
+
+var smtpTransport = nodemailer.createTransport({
+    host: "mail.smtp2go.com",
+    port: 2525, // 8025, 587 and 25 can also be used. 
+    auth: {
+        user: "smtpARQSI_1150524_1150595",
+        pass: "limao2017"
+    }
+});
+
+
 exports.criarReceita = function (req, res) {
 
     User.findById(req.userId, { password: 0 }, function (err, user) {
@@ -23,9 +37,33 @@ exports.criarReceita = function (req, res) {
             receita.medico = user._id;
             receita.prescricoes = req.body.prescricoes;
             // save the receita and check for errors
+            receita.prescricoes.forEach(function (element) {
+                var args = {
+                    path: { "id": element.posologiaID }, // path substitution var
+                    //headers: { "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJlNDlhYzJmMy1kYjI3LTQwZTgtYjI1My02NTZiODMwYzRlZDIiLCJzdWIiOiJ1dGVudGU1QGdtYWlsLmNvbSIsImV4cCI6MTUxMDQxODg4NSwiaXNzIjoiaHR0cDovL3NlbWVudGV3ZWJhcGkubG9jYWwiLCJhdWQiOiJodHRwOi8vc2VtZW50ZXdlYmFwaS5sb2NhbCJ9.0PjdNrDXsXlbsfAqkk317qqxvm_dQIQn8U7DWZcfnAs"}                 
+                }
+                client.methods.getPosologia(args, function (data, response) {
+                    receita.prescricao = response.descricao;
+                    console.log(data);
+                    console.log(response);
+                })
+
+            }, this);
             receita.save(function (err) {
                 if (err)
                     res.send(err);
+                /*smtpTransport.sendMail({
+                    from: "server@example.com",
+                    to: "recipient@example.com",
+                    subject: "Your Subject",
+                    text: "It is a test message"
+                }, function (error, response) {
+                    if (error) {
+                        console.log(error);
+                    } else {
+                        console.log("Message sent: " + response.message);
+                    }
+                });*/
                 res.json({ message: 'Receita criada com sucesso!' });
             });
 
@@ -35,7 +73,6 @@ exports.criarReceita = function (req, res) {
     });
 
 };
-
 
 
 exports.listarReceitas = function (req, res) {
