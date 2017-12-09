@@ -37,8 +37,15 @@ exports.registarUser = function (req, res) {
 
     //res.json({ message: 'Utilizador registado!' });
 
+    const payload = {
+      id: user._id,
+      user: user.email,
+      medico: user.medico,
+      farmaceutico: user.farmaceutico
+    };
+
     //create a token
-    var token = config.jwt.sign({ id: user._id }, config.secret, {
+    var token = config.jwt.sign(/*{ id: user._id }*/payload, config.secret, {
       expiresIn: 86400 //expires in 24 hours
     });
 
@@ -82,10 +89,11 @@ exports.autenticarUser = function (req, res) {
         // create a token with only our given payload
         // we don't want to pass in the entire user since that has the password
         /**const payload = {
-          //medico: user.medico 
+          medico: user.medico 
         };*/
 
         const payload = {
+          userId: user._id,
           user: user.email,
           medico: user.medico,
           farmaceutico: user.farmaceutico
@@ -94,6 +102,14 @@ exports.autenticarUser = function (req, res) {
         var token = config.jwt.sign(payload, /*app.get('superSecret')*/config.secret, {
           expiresIn: 60 * 60 * 24 // expires in 24 hours
         });
+
+        //res.writeHead(200, {'x-access-token': token});
+
+        //res.setHeader("x-access-token", token);
+        //res.set('x-access-token', token);
+
+        //res.header('x-access')
+        //res.setHeader('x-access-token', token);
 
         // return the information including token as JSON
         res.json({
@@ -134,6 +150,7 @@ exports.login = function (req, res) {
     //});
 
     const payload = {
+      userId: user._id,
       user: user.email,
       medico: user.medico,
       farmaceutico: user.farmaceutico,

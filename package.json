@@ -14,7 +14,8 @@
         "mongoose-id-validator": "^0.4.3",
         "morgan": "^1.9.0",
         "node-rest-client": "^3.1.0",
-        "nodemailer": "^4.4.0"
+        "nodemailer": "^4.4.0",
+        "rm-modules": "^1.0.2"
     },
     "devDependencies": {
         "chai": "^3.5.0",

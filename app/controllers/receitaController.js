@@ -77,19 +77,51 @@ exports.criarReceita = function (req, res) {
 
 exports.listarReceitas = function (req, res) {
 
-    /*var query = {
+    var query = {
         $or: [
             { utente: req.userId },
             { medico: req.userId }
         ]
-    }*/
+    }
 
-    Receita.find(/*query, */function (err, receita) {
+    //var query;
+
+    Receita.find(query, function (err, receita) {
         if (err)
             res.send("Nao ha receitas para visualizar.");
         res.json(receita);
     });
 
+    /**Receita.find(function(err, receitas){
+        var array=[];
+        var i=1;
+
+        if(err)
+            res.send(err);
+        for(i=0; i<receitas.length; i++){
+            if(receitas[i].medico==req.userId.toString)
+        }
+
+    });*/
+
+    /**User.findOne({ email: req.user }, function (err, user) {
+        Receita.find(function (err, receitas) {
+            var array = [];
+            var i = 1;
+
+            if(err)
+            res.send(err);
+            for (i = 0; i < receitas.length; i++) {
+                console.log("entrou");
+
+                if (receitas[i].medico == req.userId.toString() || receitas[i].utente == req.userId.toString()) {
+
+                    array.push(receitas[i]);
+                }
+            }
+            res.json(array);
+        });
+    });*/
 };
 
 exports.listaReceitaPorId = function (req, res) {
@@ -252,7 +284,7 @@ exports.atualizarReceita = function (req, res) {
             if (err)
                 res.send("A prescricao nao existe ou nao tem autorizacao para aceder a mesma!");
 
-            if (prescricao.aviamentos != undefined) {
+            if (prescricao.aviamentos != undefined || prescricao.aviamentos == null) {
                 prescricao.farmaco = req.body.farmaco;
                 prescricao.apresentacao = req.body.apresentacao;
                 prescricao.apresentacaoID = req.body.apresentacaoID;
@@ -262,7 +294,7 @@ exports.atualizarReceita = function (req, res) {
                     if (err)
                         res.send(err);
 
-                    res.json({ message: 'Prescricao atualizada criado com sucesso!' });
+                    res.json({ message: 'Prescricao atualizada com sucesso!' });
                 })
             } else {
                 res.json({ message: 'A prescricao ja tem aviamentos, logo nao pode ser atualizada!' });

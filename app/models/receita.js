@@ -7,6 +7,7 @@ var mongoose_validator = require("mongoose-id-validator");
 var receitaSchema = mongoose.Schema({
     utente: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
     medico: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+    nomeUtente: String,
     data: {type: Date, default: Date.now},
     prescricoes: [{
         farmaco : String,
