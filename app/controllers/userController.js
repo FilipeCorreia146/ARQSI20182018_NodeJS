@@ -96,7 +96,8 @@ exports.autenticarUser = function (req, res) {
           userId: user._id,
           user: user.email,
           medico: user.medico,
-          farmaceutico: user.farmaceutico
+          farmaceutico: user.farmaceutico,
+          utente: user.paciente
         };
 
         var token = config.jwt.sign(payload, /*app.get('superSecret')*/config.secret, {
