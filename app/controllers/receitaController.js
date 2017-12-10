@@ -45,7 +45,7 @@ exports.criarReceita = function (req, res) {
                 receita.prescricoes = req.body.prescricoes;
                 //receita.prescricoes = { farmaco: req.body.farmaco, quantidade: req.body.quantidade, validade: req.body.validade };
                 // save the receita and check for errors
-                receita.prescricoes.forEach(function (element) {
+                /*receita.prescricoes.forEach(function (element) {
                     var args = {
                         path: { "id": element.posologiaID }, // path substitution var
                         //headers: { "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJlNDlhYzJmMy1kYjI3LTQwZTgtYjI1My02NTZiODMwYzRlZDIiLCJzdWIiOiJ1dGVudGU1QGdtYWlsLmNvbSIsImV4cCI6MTUxMDQxODg4NSwiaXNzIjoiaHR0cDovL3NlbWVudGV3ZWJhcGkubG9jYWwiLCJhdWQiOiJodHRwOi8vc2VtZW50ZXdlYmFwaS5sb2NhbCJ9.0PjdNrDXsXlbsfAqkk317qqxvm_dQIQn8U7DWZcfnAs"}                 
@@ -56,8 +56,8 @@ exports.criarReceita = function (req, res) {
                         console.log(response);
                     })
 
-                }, this);
-                receita.prescricoes.forEach(function (element) {
+                }, this);*/
+                /*receita.prescricoes.forEach(function (element) {
                     var args = {
                         path: { "id": element.apresentacaoID }, // path substitution var
                         //headers: { "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJlNDlhYzJmMy1kYjI3LTQwZTgtYjI1My02NTZiODMwYzRlZDIiLCJzdWIiOiJ1dGVudGU1QGdtYWlsLmNvbSIsImV4cCI6MTUxMDQxODg4NSwiaXNzIjoiaHR0cDovL3NlbWVudGV3ZWJhcGkubG9jYWwiLCJhdWQiOiJodHRwOi8vc2VtZW50ZXdlYmFwaS5sb2NhbCJ9.0PjdNrDXsXlbsfAqkk317qqxvm_dQIQn8U7DWZcfnAs"}                 
@@ -68,7 +68,7 @@ exports.criarReceita = function (req, res) {
                         console.log(response);
                     })
 
-                }, this);
+                }, this);*/
                 receita.save(function (err) {
                     if (err)
                         res.send(err);
@@ -274,7 +274,7 @@ exports.atualizarReceita = function (req, res) {
             if (err)
                 res.send("A prescricao nao existe ou nao tem autorizacao para aceder a mesma!");
 
-            if (prescricao.aviamentos != undefined || prescricao.aviamentos == null) {
+            if (prescricao.aviamentos != undefined || prescricao.aviamentos == null || prescricao.aviamentos == [null]) {
                 prescricao.farmaco = req.body.farmaco;
                 prescricao.apresentacao = req.body.apresentacao;
                 prescricao.apresentacaoID = req.body.apresentacaoID;
