@@ -11,6 +11,7 @@ var Client = require('node-rest-client').Client;
 var client = new Client();
 
 client.registerMethod("getPosologia", "http://localhost:50609/api/Posologias/${id}", "GET");
+client.registerMethod("getApresentacao", "http://localhost:50609/api/Apresentacoes/${id}", "GET");
 
 var nodemailer = require("nodemailer");
 
@@ -32,40 +33,61 @@ exports.criarReceita = function (req, res) {
 
         if (user.medico == true) {
             var receita = new Receita();      // create a new instance of the Receita model
-            receita.utente = req.body.utente;
-            //receita.medico = req.body.medico;
-            receita.medico = user._id;
-            receita.prescricoes = req.body.prescricoes;
-            // save the receita and check for errors
-            receita.prescricoes.forEach(function (element) {
-                var args = {
-                    path: { "id": element.posologiaID }, // path substitution var
-                    //headers: { "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJlNDlhYzJmMy1kYjI3LTQwZTgtYjI1My02NTZiODMwYzRlZDIiLCJzdWIiOiJ1dGVudGU1QGdtYWlsLmNvbSIsImV4cCI6MTUxMDQxODg4NSwiaXNzIjoiaHR0cDovL3NlbWVudGV3ZWJhcGkubG9jYWwiLCJhdWQiOiJodHRwOi8vc2VtZW50ZXdlYmFwaS5sb2NhbCJ9.0PjdNrDXsXlbsfAqkk317qqxvm_dQIQn8U7DWZcfnAs"}                 
-                }
-                client.methods.getPosologia(args, function (data, response) {
-                    receita.prescricao = response.descricao;
-                    console.log(data);
-                    console.log(response);
-                })
+            User.findOne({ nome: req.body.nomeUtente }, function (err, userUtente) {
+                if (err) return res.status(500).send("There was a problem finding the user.");
+                if (!userUtente) return res.status(404).send("No user utente found.");
 
-            }, this);
-            receita.save(function (err) {
-                if (err)
-                    res.send(err);
-                /*smtpTransport.sendMail({
-                    from: "server@example.com",
-                    to: "recipient@example.com",
-                    subject: "Your Subject",
-                    text: "It is a test message"
-                }, function (error, response) {
-                    if (error) {
-                        console.log(error);
-                    } else {
-                        console.log("Message sent: " + response.message);
+                //receita.utente = req.body.utente;
+                receita.utente = userUtente._id;
+                receita.nomeUtente = userUtente.nome;
+                //receita.medico = req.body.medico;
+                receita.medico = user._id;
+                receita.prescricoes = req.body.prescricoes;
+                //receita.prescricoes = { farmaco: req.body.farmaco, quantidade: req.body.quantidade, validade: req.body.validade };
+                // save the receita and check for errors
+                receita.prescricoes.forEach(function (element) {
+                    var args = {
+                        path: { "id": element.posologiaID }, // path substitution var
+                        //headers: { "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJlNDlhYzJmMy1kYjI3LTQwZTgtYjI1My02NTZiODMwYzRlZDIiLCJzdWIiOiJ1dGVudGU1QGdtYWlsLmNvbSIsImV4cCI6MTUxMDQxODg4NSwiaXNzIjoiaHR0cDovL3NlbWVudGV3ZWJhcGkubG9jYWwiLCJhdWQiOiJodHRwOi8vc2VtZW50ZXdlYmFwaS5sb2NhbCJ9.0PjdNrDXsXlbsfAqkk317qqxvm_dQIQn8U7DWZcfnAs"}                 
                     }
-                });*/
-                res.json({ message: 'Receita criada com sucesso!' });
+                    client.methods.getPosologia(args, function (data, response) {
+                        receita.prescricao.posologiaPrescrita = response.descricao;
+                        console.log(data);
+                        console.log(response);
+                    })
+
+                }, this);
+                receita.prescricoes.forEach(function (element) {
+                    var args = {
+                        path: { "id": element.apresentacaoID }, // path substitution var
+                        //headers: { "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJlNDlhYzJmMy1kYjI3LTQwZTgtYjI1My02NTZiODMwYzRlZDIiLCJzdWIiOiJ1dGVudGU1QGdtYWlsLmNvbSIsImV4cCI6MTUxMDQxODg4NSwiaXNzIjoiaHR0cDovL3NlbWVudGV3ZWJhcGkubG9jYWwiLCJhdWQiOiJodHRwOi8vc2VtZW50ZXdlYmFwaS5sb2NhbCJ9.0PjdNrDXsXlbsfAqkk317qqxvm_dQIQn8U7DWZcfnAs"}                 
+                    }
+                    client.methods.getApresentacao(args, function (data, response) {
+                        receita.prescricao.apresentacao = response.descricao;
+                        console.log(data);
+                        console.log(response);
+                    })
+
+                }, this);
+                receita.save(function (err) {
+                    if (err)
+                        res.send(err);
+                    /*smtpTransport.sendMail({
+                        from: "server@example.com",
+                        to: "recipient@example.com",
+                        subject: "Your Subject",
+                        text: "It is a test message"
+                    }, function (error, response) {
+                        if (error) {
+                            console.log(error);
+                        } else {
+                            console.log("Message sent: " + response.message);
+                        }
+                    });*/
+                    res.json({ message: 'Receita criada com sucesso!' });
+                });
             });
+
 
         } else {
             res.json({ message: 'Utilizador nao autorizado! Apenas medicos podem criar receitas!' });
@@ -84,44 +106,12 @@ exports.listarReceitas = function (req, res) {
         ]
     }
 
-    //var query;
-
     Receita.find(query, function (err, receita) {
         if (err)
             res.send("Nao ha receitas para visualizar.");
         res.json(receita);
     });
 
-    /**Receita.find(function(err, receitas){
-        var array=[];
-        var i=1;
-
-        if(err)
-            res.send(err);
-        for(i=0; i<receitas.length; i++){
-            if(receitas[i].medico==req.userId.toString)
-        }
-
-    });*/
-
-    /**User.findOne({ email: req.user }, function (err, user) {
-        Receita.find(function (err, receitas) {
-            var array = [];
-            var i = 1;
-
-            if(err)
-            res.send(err);
-            for (i = 0; i < receitas.length; i++) {
-                console.log("entrou");
-
-                if (receitas[i].medico == req.userId.toString() || receitas[i].utente == req.userId.toString()) {
-
-                    array.push(receitas[i]);
-                }
-            }
-            res.json(array);
-        });
-    });*/
 };
 
 exports.listaReceitaPorId = function (req, res) {
